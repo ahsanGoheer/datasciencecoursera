@@ -1,0 +1,19 @@
+corr<-function(directory,threshold=0)
+{
+  currentWorkingDirectory<-paste('./',directory,sep="")
+  filesInDirectory<-list.files(currentWorkingDirectory)
+  complete_cases=complete(directory)
+  complete_cases<-complete_cases[complete_cases$nob>=threshold,]
+  result<-numeric(0)
+  if(nrow(complete_cases)>0)
+  {
+    for(i in complete_cases$id)
+    {
+      loaded_data<-read.csv(paste(currentWorkingDirectory,'/',filesInDirectory[i],sep=""))
+      filtered_data<-loaded_data[(!is.na(loaded_data$nitrate)),]
+      filtered_data<-filtered_data[(!is.na(filtered_data$sulfate)),]
+      result<-c(result,cor(filtered_data['sulfate'],filtered_data['nitrate']))
+    }
+  }
+  result
+}
